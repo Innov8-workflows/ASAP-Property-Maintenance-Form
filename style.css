@@ -230,12 +230,26 @@ footer{background:var(--navy-deep);color:rgba(255,255,255,.68);padding:46px 0}
 }
 @media(max-width:560px){
   .call-top small{display:none}
-  .hero-in{padding:22px 0 48px}
-  .quiz{padding:24px 18px 20px}
-  .opt-grid{gap:10px}
-  .opt-img{width:72px;height:72px}
-  .opt-label{font-size:.9rem}
+  .nav-in{height:56px}
+  .brand img{height:36px}
+  /* compact hero so the form's options show above the fold */
+  .hero-in{padding:12px 0 22px}
+  .hero-rating{margin-bottom:12px;padding:7px 13px;gap:10px}
+  .hero-rating .rate-logo img{height:28px}
   .rate-text span{display:none}
+  .hero-in h1{font-size:1.7rem;line-height:1.12;margin-bottom:9px}
+  .hero-pill{font-size:.83rem;padding:7px 14px;margin-bottom:14px}
+  /* compact quiz head so the cards come up sooner */
+  .quiz{padding:20px 16px 18px}
+  .quiz-head{margin-bottom:10px}
+  .quiz-head h2{font-size:1.3rem}
+  .quiz-time{margin-top:7px}
+  .progress{margin-bottom:14px}
+  .quiz-q{font-size:1.15rem;margin-bottom:13px}
+  .opt{padding:13px 10px;gap:8px}
+  .opt-grid{gap:10px}
+  .opt-img{width:62px;height:62px}
+  .opt-label{font-size:.86rem}
   .trust-in{gap:12px 22px}
   .trust-item{font-size:.9rem}
   .rev-card-inner{padding:22px 20px}
