@@ -233,11 +233,14 @@ footer{background:var(--navy-deep);color:rgba(255,255,255,.68);padding:46px 0}
   .nav-in{height:56px}
   .brand img{height:36px}
   /* compact hero so the form's options show above the fold */
-  .hero-in{padding:12px 0 22px}
-  .hero-rating{margin-bottom:12px;padding:7px 13px;gap:10px}
+  /* mobile: drone clip becomes a full-frame 16:9 top banner; content sits below on navy */
+  .hero-media{position:static;width:100%;aspect-ratio:16/9;z-index:auto}
+  .hero::after{display:none}
+  .hero-in{padding:0 0 26px}
+  .hero-rating{margin-top:16px;margin-bottom:14px;padding:7px 13px;gap:10px}
   .hero-rating .rate-logo img{height:28px}
   .rate-text span{display:none}
-  .hero-in h1{font-size:1.7rem;line-height:1.12;margin-bottom:9px}
+  .hero-in h1{font-size:1.7rem;line-height:1.12;margin-bottom:9px;text-shadow:none}
   .hero-pill{font-size:.83rem;padding:7px 14px;margin-bottom:14px}
   /* compact quiz head so the cards come up sooner */
   .quiz{padding:20px 16px 18px}
