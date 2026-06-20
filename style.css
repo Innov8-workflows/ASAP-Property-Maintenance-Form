@@ -33,7 +33,7 @@ header{position:sticky;top:0;z-index:1000;background:rgba(10,26,58,.94);backdrop
 .hero{position:relative;overflow:hidden;background:var(--navy-deep)}
 .hero-media{position:absolute;inset:0;z-index:0}
 .hero-media video{width:100%;height:100%;object-fit:cover}
-.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,16,36,.82),rgba(7,18,42,.78) 45%,rgba(6,15,34,.92));z-index:1}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,16,36,.66),rgba(7,18,42,.62) 45%,rgba(6,15,34,.74));z-index:1}
 .hero-in{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center;padding:30px 0 60px;max-width:720px}
 
 /* hero rating card */
@@ -185,7 +185,7 @@ header{position:sticky;top:0;z-index:1000;background:rgba(10,26,58,.94);backdrop
 /* ===== CTA BAND (final hero) ===== */
 .cta-band{position:relative;overflow:hidden;background:var(--navy-deep);padding:96px 0;text-align:center}
 .cta-band::before{content:"";position:absolute;inset:0;background:url('assets/cta-roof.jpg') center/cover;z-index:0}
-.cta-band::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,16,36,.85),rgba(7,18,42,.8));z-index:1}
+.cta-band::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,16,36,.68),rgba(7,18,42,.64));z-index:1}
 .cta-in{position:relative;z-index:2}
 .cta-stars{display:inline-block;color:rgba(255,255,255,.92);font-weight:600;font-size:.9rem;margin-bottom:16px}
 .cta-stars b{color:var(--gold);letter-spacing:2px;font-weight:700}
