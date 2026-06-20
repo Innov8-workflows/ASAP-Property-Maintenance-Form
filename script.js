@@ -71,6 +71,8 @@ document.getElementById('toBooking').addEventListener('click', () => {
   [name, phone].forEach(f => { if(!f.value.trim()){ f.classList.add('err'); ok = false; } else f.classList.remove('err'); });
   if(!ok){ (name.value.trim() ? phone : name).focus(); return; }
   lead.name = val('leadName'); lead.phone = val('leadPhone'); lead.email = val('leadEmail');
+  // Meta conversion: real lead captured (contact details submitted). Guarded so it fires once.
+  if(window.fbq && !lead._tracked){ fbq('track', 'Lead'); lead._tracked = true; }
   document.getElementById('bookSub').textContent = 'Almost there, ' + lead.name.split(' ')[0] + ' — pick a time below.';
   goStep('5', true);
   initCalendly();
