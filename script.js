@@ -20,8 +20,10 @@ function setupVideo(v, src){
 }
 const heroVideo = document.getElementById('heroVideo');
 const baVideo   = document.getElementById('baVideo');
+const ctaVideo  = document.getElementById('ctaVideo');
 setupVideo(heroVideo, 'assets/hero.mp4');
 setupVideo(baVideo,   'assets/ba.mp4');
+setupVideo(ctaVideo,  'assets/cta.mp4');
 document.addEventListener('touchstart', () => {
   if(heroVideo){ const p = heroVideo.play(); if(p && p.catch) p.catch(()=>{}); }
 }, {once:true, passive:true});
