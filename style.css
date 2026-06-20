@@ -121,6 +121,21 @@ header{position:sticky;top:0;z-index:1000;background:rgba(10,26,58,.94);backdrop
 .trust-item{display:flex;align-items:center;gap:10px;color:#fff;font-weight:700;font-size:1rem;font-family:'Plus Jakarta Sans',sans-serif}
 .trust-item .tick{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#1fae5a;color:#fff;font-size:.85rem;flex-shrink:0}
 
+/* ===== ACCREDITATIONS ===== */
+.accred{background:var(--white);padding:42px 0}
+.accred-in{display:flex;flex-direction:column;align-items:center;gap:18px}
+.accred-label{font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.accred-logos{display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:center}
+.accred-badge{display:inline-flex;align-items:center;gap:12px;padding:14px 24px;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:var(--shadow)}
+.ck-tick{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:7px;background:#0a5dc2;flex-shrink:0}
+.ck-tick svg{width:16px;height:16px}
+.ck-word{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.35rem;color:#0e2c5a;letter-spacing:-.02em}
+.gg-shield{flex-shrink:0}
+.gg-shield svg{width:30px;height:30px;display:block}
+.gg-text{font-family:'Plus Jakarta Sans',Arial,sans-serif;font-weight:700;font-size:1.2rem;line-height:1;white-space:nowrap}
+.gg-google span{font-style:normal}
+.gg-guar{color:#5f6368;font-weight:600;margin-left:3px}
+
 /* ===== PROOF ===== */
 .sec-head{text-align:center;max-width:600px;margin:0 auto 40px}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:14px;justify-content:center}
