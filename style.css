@@ -232,15 +232,17 @@ footer{background:var(--navy-deep);color:rgba(255,255,255,.68);padding:46px 0}
   .call-top small{display:none}
   .nav-in{height:56px}
   .brand img{height:36px}
-  /* compact hero so the form's options show above the fold */
-  /* mobile: drone clip becomes a full-frame 16:9 top banner; content sits below on navy */
-  .hero-media{position:static;width:100%;aspect-ratio:16/9;z-index:auto}
-  .hero::after{display:none}
-  .hero-in{padding:0 0 26px}
-  .hero-rating{margin-top:16px;margin-bottom:14px;padding:7px 13px;gap:10px}
+  /* mobile: drone clip is a tall background banner at the top; the rating card, headline
+     and pill overlay its lower portion (like desktop) so the quiz form sits right under
+     the video instead of being pushed down by stacked content */
+  .hero-media{position:absolute;top:0;left:0;right:0;height:50vh;z-index:0}
+  .hero::after{display:block;top:0;left:0;right:0;bottom:auto;height:50vh;
+    background:linear-gradient(180deg,rgba(6,16,36,.10) 0%,rgba(6,16,36,.32) 46%,rgba(6,18,42,.84) 80%,rgba(6,18,42,.99) 100%)}
+  .hero-in{padding:26vh 0 26px}
+  .hero-rating{margin-top:0;margin-bottom:14px;padding:7px 13px;gap:10px}
   .hero-rating .rate-logo img{height:28px}
   .rate-text span{display:none}
-  .hero-in h1{font-size:1.7rem;line-height:1.12;margin-bottom:9px;text-shadow:none}
+  .hero-in h1{font-size:1.7rem;line-height:1.12;margin-bottom:9px;text-shadow:0 2px 12px rgba(6,16,36,.6)}
   .hero-pill{font-size:.83rem;padding:7px 14px;margin-bottom:14px}
   /* compact quiz head so the cards come up sooner */
   .quiz{padding:20px 16px 18px}
