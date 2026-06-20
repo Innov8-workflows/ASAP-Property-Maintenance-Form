@@ -220,6 +220,22 @@ footer{background:var(--navy-deep);color:rgba(255,255,255,.68);padding:46px 0}
 .wa-float:hover{transform:scale(1.08)}
 .wa-float svg{width:30px;height:30px;fill:#fff}
 
+/* ===== COOKIE CONSENT BAR ===== */
+.cookie-bar{position:fixed;left:16px;right:16px;bottom:16px;z-index:1200;max-width:560px;margin:0 auto;
+  background:rgba(10,26,58,.98);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);
+  border-radius:14px;box-shadow:var(--shadow-lg);padding:16px 18px;
+  display:none;flex-direction:column;gap:12px;color:rgba(255,255,255,.92)}
+.cookie-bar.show{display:flex}
+.cookie-text{font-size:.85rem;line-height:1.5}
+.cookie-text a{color:var(--gold-soft);font-weight:600;text-decoration:underline}
+.cookie-btns{display:flex;gap:10px}
+.cookie-btns .btn{flex:1;margin:0;padding:11px 18px;font-size:.92rem}
+.cookie-reject{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.3)}
+.cookie-reject:hover{background:rgba(255,255,255,.17)}
+@media(min-width:600px){
+  .cookie-bar{left:20px;right:auto;bottom:20px;margin:0;max-width:440px}
+}
+
 /* ===== RESPONSIVE ===== */
 @media(max-width:900px){
   .inspect-in{grid-template-columns:1fr;gap:30px}
