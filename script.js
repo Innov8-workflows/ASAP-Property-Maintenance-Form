@@ -73,8 +73,12 @@ document.getElementById('toBooking').addEventListener('click', () => {
   [name, phone].forEach(f => { if(!f.value.trim()){ f.classList.add('err'); ok = false; } else f.classList.remove('err'); });
   if(!ok){ (name.value.trim() ? phone : name).focus(); return; }
   lead.name = val('leadName'); lead.phone = val('leadPhone'); lead.email = val('leadEmail');
-  // Meta conversion: real lead captured (contact details submitted). Guarded so it fires once.
-  if(window.fbq && !lead._tracked){ fbq('track', 'Lead'); lead._tracked = true; }
+  // Conversions: real lead captured (contact details submitted). Guarded so each fires once.
+  if(!lead._tracked){
+    if(window.fbq)  fbq('track', 'Lead');
+    if(window.gtag) gtag('event', 'generate_lead', { service: lead.service || '', urgency: lead.urgency || '' });
+    lead._tracked = true;
+  }
   document.getElementById('bookSub').textContent = 'Almost there, ' + lead.name.split(' ')[0] + ' — pick a time below.';
   goStep('5', true);
   initCalendly();
@@ -132,6 +136,7 @@ function waLink(booked){
 function showDone(booked){
   goStep('done', true);
   progressBar.style.width = '100%';
+  if(window.gtag) gtag('event', booked ? 'booking_confirmed' : 'enquiry_sent');
   var fn = lead.name ? lead.name.split(' ')[0] : 'there';
   document.getElementById('doneHead').textContent = booked ? 'Booking Confirmed!' : 'Request Sent!';
   document.getElementById('doneMsg').textContent = booked
