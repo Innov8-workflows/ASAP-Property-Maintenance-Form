@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- Security: Content Security Policy (GitHub Pages can't set real HTTP headers, so set via meta) + referrer policy. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://assets.calendly.com; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://assets.calendly.com https://connect.facebook.net; connect-src 'self' https://www.googletagmanager.com https://*.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.g.doubleclick.net https://connect.facebook.net https://*.facebook.com https://calendly.com https://*.calendly.com; frame-src https://calendly.com https://*.calendly.com https://www.facebook.com; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
 <!-- Google tag (gtag.js) with Consent Mode v2 — analytics & ads denied until the visitor accepts -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RL85CDLR1B"></script>
 <script>
@@ -141,7 +145,7 @@
     <div class="foot-c">
       <div>© <span id="yr"></span> ASAP Property Maintenance Ltd · Staffordshire, Cannock &amp; surrounding areas</div>
       <div style="margin-top:4px">Call <a href="tel:07865989617">07865 989617</a> · Website by <a href="https://innov8workflows.co.uk" target="_blank" rel="noopener">Innov8 Workflows</a></div>
-      <div style="margin-top:4px"><a href="privacy.html">Privacy Policy</a> · <a href="#" onclick="if(window.openCookieSettings){openCookieSettings();}return false;">Cookie settings</a></div>
+      <div style="margin-top:4px"><a href="privacy.html">Privacy Policy</a> · <a href="#" id="cookieSettingsLink">Cookie settings</a></div>
     </div>
   </div>
 </footer>

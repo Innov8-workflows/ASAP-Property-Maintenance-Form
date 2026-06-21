@@ -4,6 +4,10 @@
 
 document.getElementById('yr').textContent = new Date().getFullYear();
 
+// Escape visitor-entered values before inserting them as HTML (prevents markup injection)
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
 /* ---------- LAZY BACKGROUND VIDEOS ---------- */
 function setupVideo(v, src){
   if(!v) return;
@@ -143,8 +147,8 @@ function showDone(booked){
     ? 'Thanks ' + fn + '! Your home visit is in the diary — ASAP will be in touch to confirm the details.'
     : 'Thanks ' + fn + "! We've got your enquiry and will call you back shortly to arrange a time.";
   document.getElementById('doneSummary').innerHTML =
-    '<b>Name:</b> ' + (lead.name || '-') + '<br><b>Phone:</b> ' + (lead.phone || '-') +
-    '<br><b>For:</b> ' + (lead.service || 'Roofing quote') + (lead.postcode ? ' · ' + lead.postcode : '');
+    '<b>Name:</b> ' + esc(lead.name || '-') + '<br><b>Phone:</b> ' + esc(lead.phone || '-') +
+    '<br><b>For:</b> ' + esc(lead.service || 'Roofing quote') + (lead.postcode ? ' · ' + esc(lead.postcode) : '');
   var wa = document.getElementById('waConfirm');
   wa.href = waLink(booked);
   wa.textContent = booked ? 'Send ASAP your job details' : 'Send my enquiry on WhatsApp';
