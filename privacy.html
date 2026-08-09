@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- Security: Content Security Policy (GitHub Pages can't set real HTTP headers, so set via meta) + referrer policy. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://assets.calendly.com; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://assets.calendly.com https://connect.facebook.net; connect-src 'self' https://www.googletagmanager.com https://*.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.g.doubleclick.net https://connect.facebook.net https://*.facebook.com https://calendly.com https://*.calendly.com; frame-src https://calendly.com https://*.calendly.com https://www.facebook.com; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://assets.calendly.com; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://assets.calendly.com https://connect.facebook.net; connect-src 'self' https://www.googletagmanager.com https://*.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.g.doubleclick.net https://connect.facebook.net https://*.facebook.com https://calendly.com https://*.calendly.com https://script.google.com https://script.googleusercontent.com; frame-src https://calendly.com https://*.calendly.com https://www.facebook.com; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 
 <!-- Google tag (gtag.js) with Consent Mode v2 — analytics & ads denied until the visitor accepts -->
@@ -103,13 +103,13 @@
     <li><strong>Analytics</strong> — Google Analytics (GA4), to measure visits and how the site is used.</li>
     <li><strong>Advertising</strong> — the Meta (Facebook) Pixel, to measure the performance of our adverts.</li>
   </ul>
-  <p>Analytics and advertising cookies are <strong>not loaded until you accept</strong> them on our cookie banner. You can change or withdraw your choice at any time using the <a href="#" id="cookieSettingsLink">Cookie settings</a> link in the footer.</p>
+  <p>Analytics and advertising cookies are <strong>not loaded until you accept</strong> them on our cookie banner. You can change or withdraw your choice at any time using the <a href="#" class="cookie-settings">Cookie settings</a> link in the footer.</p>
 
   <h2>Who we share your information with</h2>
   <p>We do not sell your personal information. We share it only with trusted providers who help us run our business and act on our instructions, including:</p>
   <ul>
     <li><strong>Calendly</strong> — to manage inspection bookings</li>
-    <li><strong>Google</strong> — for website analytics</li>
+    <li><strong>Google</strong> — for website analytics, and to record the enquiry details you send us through this site (Google Sheets)</li>
     <li><strong>Meta Platforms</strong> — for advertising measurement</li>
   </ul>
   <p>Some of these providers may process data outside the UK. Where they do, appropriate safeguards (such as UK-approved contract terms or adequacy decisions) are in place to protect your information. We may also disclose information where required by law.</p>
@@ -155,5 +155,7 @@
 </a>
 
 <script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+<!-- Lead logger -> Google Sheet (Apps Script). Not consent-gated: see lead.js -->
+<script src="lead.js"></script>
 </body>
 </html>

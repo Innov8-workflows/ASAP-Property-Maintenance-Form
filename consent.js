@@ -77,8 +77,13 @@
 
   function init(){
     if(!stored()) show();
-    var link = document.getElementById('cookieSettingsLink');
-    if(link) link.addEventListener('click', function(e){ e.preventDefault(); show(); });
+    // querySelectorAll, not getElementById: the privacy page has a second
+    // cookie-settings link in the body text, and getElementById would only
+    // ever bind the first one, leaving the footer link dead.
+    var links = document.querySelectorAll('#cookieSettingsLink, .cookie-settings');
+    for(var i = 0; i < links.length; i++){
+      links[i].addEventListener('click', function(e){ e.preventDefault(); show(); });
+    }
   }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
