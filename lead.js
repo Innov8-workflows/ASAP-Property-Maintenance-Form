@@ -17,7 +17,7 @@
 /* Apps Script web-app /exec URL. Empty = this file is inert, so deploying
    before the script exists breaks nothing. On redeploy always use
    Manage deployments -> pencil -> New version, so this URL stays valid. */
-var LEAD_URL = '';
+var LEAD_URL = 'https://script.google.com/macros/s/AKfycbyNjq7hDc5xAB-se_bMQl5Z0iTUnAztr1-GjtTBtl-RdNzhW8zPbUDLhr1oS7O9LYBElw/exec';
 
 /* ?leadtest=1 sends rows to the sheet's "Test" tab and suppresses every email
    server-side. It's what makes verifying on the LIVE domain safe — the CSP can
