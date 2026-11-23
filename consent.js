@@ -1,56 +1,67 @@
-/* ===== ASAP Property Maintenance — Cookie consent + deferred trackers =====
-   - Google Analytics (GA4) loads with Consent Mode v2 defaulted to "denied"
-     (set inline in <head>); this file flips it to "granted" only on Accept.
-   - The Meta/Facebook Pixel is NOT loaded at all until the visitor accepts.
-   - The visitor's choice is stored so the banner only shows until they decide,
-     and can be reopened any time via the footer "Cookie settings" link. */
+
+
 (function(){
   'use strict';
-  var KEY = 'asap_cookie_consent';      // stored value: 'granted' | 'denied'
-  var PIXEL_ID = '830826223035594';
+  var root = document.documentElement;
+  var GA = root.getAttribute('data-ga') || '';
+  var PX = root.getAttribute('data-pixel') || '';
+  var KEY = 'asap_cookie_consent';
+  var started = false;
+  var q = [];
 
-  // ---- Meta Pixel: injected once, and only after consent is granted ----
-  window.loadMetaPixel = function(){
-    if(window._asapPixelLoaded) return; window._asapPixelLoaded = true;
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', PIXEL_ID);
-    fbq('track', 'PageView');
+  var GA_NAME = { Lead: 'generate_lead' };
+  var META_STD = { Lead: 1, Contact: 1, PageView: 1 };
+
+  function startTrackers(){
+    if(started) return;
+    started = true;
+    if(GA){
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function(){ window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', GA);
+      var g = document.createElement('script');
+      g.async = true;
+      g.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA);
+      document.head.appendChild(g);
+    }
+    if(PX){
+      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+      n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+      document,'script','https://connect.facebook.net/en_US/fbevents.js');
+      window.fbq('init', PX);
+      window.fbq('track', 'PageView');
+    }
+  }
+
+  window.track = function(name, params, eventId){
+    if(!started){ q.push([name, params, eventId]); return; }
+    try{
+      if(window.gtag) window.gtag('event', GA_NAME[name] || name, params || {});
+      if(window.fbq){
+        var type = META_STD[name] ? 'track' : 'trackCustom';
+        if(eventId) window.fbq(type, name, params || {}, { eventID: eventId });
+        else window.fbq(type, name, params || {});
+      }
+    }catch(e){}
   };
-
-  // gtag is defined inline in <head>; fall back to a dataLayer push if not.
-  function gt(){
-    return (typeof window.gtag === 'function')
-      ? window.gtag
-      : function(){ (window.dataLayer = window.dataLayer || []).push(arguments); };
-  }
-
-  function apply(granted){
-    gt()('consent', 'update', {
-      ad_storage:         granted ? 'granted' : 'denied',
-      ad_user_data:       granted ? 'granted' : 'denied',
-      ad_personalization: granted ? 'granted' : 'denied',
-      analytics_storage:  granted ? 'granted' : 'denied'
-    });
-    if(granted){ window.loadMetaPixel(); }
-    else if(window.fbq){ try{ fbq('consent', 'revoke'); }catch(e){} }
-  }
+  function flush(){ var c = q.slice(); q.length = 0; c.forEach(function(e){ window.track(e[0], e[1], e[2]); }); }
 
   function stored(){ try{ return localStorage.getItem(KEY); }catch(e){ return null; } }
   function save(v){ try{ localStorage.setItem(KEY, v); }catch(e){} }
 
-  // Re-apply any previous choice as early as possible (return visitors).
-  var prior = stored();
-  if(prior === 'granted') apply(true);
-  else if(prior === 'denied') apply(false);
+  function accept(){ save('granted'); startTrackers(); flush(); hide(); }
+  function reject(){
+    save('denied'); q.length = 0; hide();
 
-  // ---- Consent banner ----
+    try{ if(window.gtag) window.gtag('consent', 'update', { analytics_storage:'denied', ad_storage:'denied', ad_user_data:'denied', ad_personalization:'denied' }); }catch(e){}
+    try{ if(window.fbq) window.fbq('consent', 'revoke'); }catch(e){}
+  }
+
+  if(stored() === 'granted'){ startTrackers(); }
+
   function build(){
     if(document.getElementById('cookieBar')) return;
     var bar = document.createElement('div');
@@ -66,20 +77,15 @@
         '<button type="button" class="btn btn-gold cookie-accept" id="cookieAccept">Accept</button>' +
       '</div>';
     document.body.appendChild(bar);
-    document.getElementById('cookieAccept').addEventListener('click', function(){ save('granted'); apply(true); hide(); });
-    document.getElementById('cookieReject').addEventListener('click', function(){ save('denied'); apply(false); hide(); });
+    document.getElementById('cookieAccept').addEventListener('click', accept);
+    document.getElementById('cookieReject').addEventListener('click', reject);
   }
   function show(){ build(); var b = document.getElementById('cookieBar'); if(b) b.classList.add('show'); }
   function hide(){ var b = document.getElementById('cookieBar'); if(b) b.classList.remove('show'); }
-
-  // Allow the visitor to reopen / change their choice from the footer link.
-  window.openCookieSettings = function(){ show(); };
+  window.openCookieSettings = show;
 
   function init(){
     if(!stored()) show();
-    // querySelectorAll, not getElementById: the privacy page has a second
-    // cookie-settings link in the body text, and getElementById would only
-    // ever bind the first one, leaving the footer link dead.
     var links = document.querySelectorAll('#cookieSettingsLink, .cookie-settings');
     for(var i = 0; i < links.length; i++){
       links[i].addEventListener('click', function(e){ e.preventDefault(); show(); });
