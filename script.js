@@ -252,50 +252,77 @@ var REVIEWS = [
 (function initSlider(){
   var track_ = document.getElementById('revTrack');
   var dotsWrap = document.getElementById('revDots');
-  if(!track_ || !REVIEWS.length) return;
-  var fb = '<svg viewBox="0 0 24 24" width="16" height="16" fill="#1877F2" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z"/></svg>';
-  var initials = function(n){ return n.split(/[\s.]+/).filter(Boolean).slice(0,2).map(function(w){ return w[0]; }).join('').toUpperCase(); };
+  var view = document.getElementById('revView');
+  if(!track_ || !dotsWrap || !view || !REVIEWS.length) return;
+  var FB = '<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>';
+  var THUMB = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>';
 
   track_.innerHTML = REVIEWS.map(function(r){
-    return '<div class="rev-card"><div class="rev-card-inner">' +
-      '<span class="rev-rec">' + fb + 'Recommends ASAP</span>' +
-      '<p>' + esc(r.text) + '</p>' +
-      '<div class="rev-author"><span class="rev-avatar">' + esc(initials(r.name)) + '</span>' +
-      '<div class="rev-author-meta"><strong>' + esc(r.name) + '</strong><span>Facebook review</span></div></div>' +
-    '</div></div>';
+    return '<div class="rev-cell"><article class="rev-card">' +
+      '<div class="rev-top"><div class="rev-av">' + FB + '</div>' +
+      '<div class="rev-who"><b>' + esc(r.name) + '</b><span>Facebook recommendation</span></div></div>' +
+      '<div class="rev-rec">' + THUMB + 'Recommends ASAP</div>' +
+      '<div class="rev-body"><p data-verbatim>' + esc(r.text) + '</p><button type="button" class="rev-more" hidden>Read more</button></div>' +
+      '<div class="rev-foot">Recommended on Facebook</div>' +
+    '</article></div>';
   }).join('');
 
-  dotsWrap.innerHTML = REVIEWS.map(function(_, i){ return '<button class="rev-dot' + (i === 0 ? ' active' : '') + '" data-i="' + i + '" aria-label="Go to review ' + (i + 1) + '"></button>'; }).join('');
-  var dots = Array.prototype.slice.call(dotsWrap.children);
-
-  var cur = 0, timer = null;
-  function show(i){
-    cur = (i + REVIEWS.length) % REVIEWS.length;
-    track_.style.transform = 'translateX(-' + (cur * 100) + '%)';
-    dots.forEach(function(d, n){ d.classList.toggle('active', n === cur); });
+  function clampCheck(){
+    Array.prototype.forEach.call(track_.querySelectorAll('.rev-card'), function(card){
+      if(card.classList.contains('open')) return;
+      var p = card.querySelector('.rev-body p');
+      card.querySelector('.rev-more').hidden = p.scrollHeight <= p.clientHeight + 2;
+    });
   }
-  function next(){ show(cur + 1); }
-  function prev(){ show(cur - 1); }
-  function play(){ stop(); timer = setInterval(next, 6500); }
+  track_.addEventListener('click', function(e){
+    var b = e.target.closest('.rev-more');
+    if(!b) return;
+    var open = b.closest('.rev-card').classList.toggle('open');
+    b.textContent = open ? 'Show less' : 'Read more';
+  });
+
+  function perView(){ return window.innerWidth <= 680 ? 1 : (window.innerWidth <= 1024 ? 2 : 3); }
+  var pv = perView(), page = 0, timer = null;
+  function pages(){ return Math.max(1, Math.ceil(REVIEWS.length / pv)); }
+  function buildDots(){
+    dotsWrap.innerHTML = '';
+    for(var i = 0; i < pages(); i++){
+      (function(i){
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('aria-label', 'Reviews page ' + (i + 1));
+        b.addEventListener('click', function(){ go(i); reset(); });
+        dotsWrap.appendChild(b);
+      })(i);
+    }
+  }
+  function go(n){
+    var pc = pages();
+    page = (n + pc) % pc;
+    track_.style.transform = 'translateX(-' + (page * 100) + '%)';
+    Array.prototype.forEach.call(dotsWrap.children, function(b, k){ b.classList.toggle('active', k === page); });
+  }
   function stop(){ if(timer){ clearInterval(timer); timer = null; } }
+  function reset(){ stop(); timer = setInterval(function(){ go(page + 1); }, 6500); }
 
-  document.getElementById('revNext').addEventListener('click', function(){ next(); play(); });
-  document.getElementById('revPrev').addEventListener('click', function(){ prev(); play(); });
-  dots.forEach(function(d){ d.addEventListener('click', function(){ show(+d.getAttribute('data-i')); play(); }); });
-
-  var slider = document.getElementById('revSlider');
-  slider.addEventListener('mouseenter', stop);
-  slider.addEventListener('mouseleave', play);
-  var x0 = null;
-  slider.addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX; stop(); }, {passive:true});
-  slider.addEventListener('touchend', function(e){
-    if(x0 === null) return;
-    var dx = e.changedTouches[0].clientX - x0;
-    if(Math.abs(dx) > 40){ if(dx < 0) next(); else prev(); }
-    x0 = null; play();
+  buildDots(); go(0); reset(); clampCheck();
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(clampCheck);
+  view.addEventListener('mouseenter', stop);
+  view.addEventListener('mouseleave', reset);
+  document.getElementById('revPrev').addEventListener('click', function(){ go(page - 1); reset(); });
+  document.getElementById('revNext').addEventListener('click', function(){ go(page + 1); reset(); });
+  var sx = 0, sy = 0;
+  view.addEventListener('touchstart', function(e){ sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, {passive:true});
+  view.addEventListener('touchend', function(e){
+    var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+    if(Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)){ go(page + (dx < 0 ? 1 : -1)); reset(); }
   }, {passive:true});
-
-  show(0); play();
+  window.addEventListener('resize', function(){
+    clampCheck();
+    var n = perView();
+    if(n !== pv){ pv = n; buildDots(); go(0); reset(); }
+  });
+  document.addEventListener('visibilitychange', function(){ if(document.hidden) stop(); else reset(); });
 })();
 
 })();
