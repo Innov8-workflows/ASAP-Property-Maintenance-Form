@@ -13,6 +13,11 @@ function track(n, p, id){ if(window.track) window.track(n, p, id); }
 function ghlEndpoint(){ return root.getAttribute('data-ghl-endpoint') || ''; }
 function ghlCalendar(){ return root.getAttribute('data-ghl-calendar') || ''; }
 
+(function(){
+  var p = document.getElementById('stepBook');
+  if(p && !ghlCalendar() && p.getAttribute('data-nocal')) p.textContent = p.getAttribute('data-nocal');
+})();
+
 function postGHL(d){
   var url = ghlEndpoint(); if(!url) return;
   try{
