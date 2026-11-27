@@ -70,8 +70,7 @@
     bar.setAttribute('role', 'dialog');
     bar.setAttribute('aria-label', 'Cookie consent');
     bar.innerHTML =
-      '<div class="cookie-text">We use cookies to measure website traffic and the performance of our advertising. ' +
-      'Essential cookies are always on; you can accept or reject the rest. See our <a href="privacy.html">Privacy Policy</a>.</div>' +
+      '<div class="cookie-text">We use cookies to measure traffic and how our ads perform. <a href="privacy.html">Privacy Policy</a></div>' +
       '<div class="cookie-btns">' +
         '<button type="button" class="btn cookie-reject" id="cookieReject">Reject</button>' +
         '<button type="button" class="btn btn-gold cookie-accept" id="cookieAccept">Accept</button>' +
