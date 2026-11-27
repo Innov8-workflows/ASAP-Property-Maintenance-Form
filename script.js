@@ -19,7 +19,7 @@ function ghlCalendar(){ return root.getAttribute('data-ghl-calendar') || ''; }
 })();
 
 function tsKey(){ return root.getAttribute('data-turnstile-sitekey') || ''; }
-var ts = { token: '', waiters: [], loading: false };
+var ts = { token: '', waiters: [], loading: false, error: false };
 function tsDone(tok){
   ts.token = tok || '';
   var w = ts.waiters; ts.waiters = [];
@@ -31,18 +31,24 @@ function tsLoad(){
   window.asapTurnstileReady = function(){
     try{
       window.turnstile.render('#tsBox', {
-        sitekey: tsKey(), action: 'quote', appearance: 'interaction-only',
-        callback: tsDone,
+        sitekey: tsKey(), action: 'quote', appearance: 'interaction-only', theme: 'light',
+        callback: function(tok){ ts.error = false; tsDone(tok); },
         'expired-callback': function(){ ts.token = ''; },
-        'error-callback': function(){ tsDone(''); }
+        'error-callback': function(){ ts.error = true; tsDone(''); }
       });
     }catch(e){ tsDone(''); }
   };
   var s = document.createElement('script');
   s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=asapTurnstileReady';
   s.async = true;
-  s.onerror = function(){ tsDone(''); };
+  s.onerror = function(){ ts.error = true; tsDone(''); };
   document.head.appendChild(s);
+}
+
+function tsNeedsTick(){
+  if(!ghlEndpoint() || !tsKey() || ts.token || ts.error) return false;
+  var b = document.getElementById('tsBox');
+  return !!b && b.getBoundingClientRect().height > 20;
 }
 
 function tsToken(ms, cb){
@@ -164,11 +170,22 @@ function cookie(n){
 }
 
 el('toBooking').addEventListener('click', function(){
+  var e4r = el('err4'); if(e4r.getAttribute('data-text')) e4r.textContent = e4r.getAttribute('data-text');
   var bad = check(['leadName', 'leadPhone']);
   el('err4').hidden = !bad.length;
   if(bad.length){ el(bad[0]).focus(); track('funnel_invalid', { step: 4, missing: bad.join(',') }); return; }
 
   lead.name = v('leadName'); lead.phone = v('leadPhone'); lead.email = v('leadEmail');
+
+  if(!lead._sent && !lead._tsAsked && tsNeedsTick()){
+    lead._tsAsked = true;
+    var e4 = el('err4');
+    if(!e4.getAttribute('data-text')) e4.setAttribute('data-text', e4.textContent);
+    e4.textContent = 'Please tick the box above to confirm you are a person, then press the button again.';
+    e4.hidden = false;
+    track('funnel_invalid', { step: 4, missing: 'turnstile' });
+    return;
+  }
 
   if(v('leadWebsite')){ showDone(false); return; }
 
