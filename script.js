@@ -42,7 +42,7 @@ function setupVideo(v, src){
   } else { start(); }
 }
 var heroVideo = document.getElementById('heroVideo');
-setupVideo(heroVideo, 'assets/hero.mp4');
+setupVideo(heroVideo, 'assets/hero-drone.mp4');
 setupVideo(document.getElementById('baVideo'), 'assets/ba.mp4');
 setupVideo(document.getElementById('ctaVideo'), 'assets/cta.mp4');
 document.addEventListener('touchstart', function(){
