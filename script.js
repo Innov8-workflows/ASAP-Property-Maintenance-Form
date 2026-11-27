@@ -18,14 +18,53 @@ function ghlCalendar(){ return root.getAttribute('data-ghl-calendar') || ''; }
   if(p && !ghlCalendar() && p.getAttribute('data-nocal')) p.textContent = p.getAttribute('data-nocal');
 })();
 
+function tsKey(){ return root.getAttribute('data-turnstile-sitekey') || ''; }
+var ts = { token: '', waiters: [], loading: false };
+function tsDone(tok){
+  ts.token = tok || '';
+  var w = ts.waiters; ts.waiters = [];
+  w.forEach(function(f){ f(ts.token); });
+}
+function tsLoad(){
+  if(!ghlEndpoint() || !tsKey() || ts.loading) return;
+  ts.loading = true;
+  window.asapTurnstileReady = function(){
+    try{
+      window.turnstile.render('#tsBox', {
+        sitekey: tsKey(), action: 'quote', appearance: 'interaction-only',
+        callback: tsDone,
+        'expired-callback': function(){ ts.token = ''; },
+        'error-callback': function(){ tsDone(''); }
+      });
+    }catch(e){ tsDone(''); }
+  };
+  var s = document.createElement('script');
+  s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=asapTurnstileReady';
+  s.async = true;
+  s.onerror = function(){ tsDone(''); };
+  document.head.appendChild(s);
+}
+
+function tsToken(ms, cb){
+  if(!tsKey()) return cb('');
+  if(ts.token) return cb(ts.token);
+  var done = false;
+  var t = setTimeout(function(){ if(!done){ done = true; cb(''); } }, ms);
+  ts.waiters.push(function(tok){ if(!done && tok){ done = true; clearTimeout(t); cb(tok); } });
+}
+
 function postGHL(d){
   var url = ghlEndpoint(); if(!url) return;
-  try{
+  tsLoad();
+  tsToken(8000, function(tok){
+    d.cf_turnstile = tok;
+    try{
 
-    fetch(url, {method:'POST', keepalive:true,
-      headers:{'Content-Type':'text/plain;charset=UTF-8'},
-      body:JSON.stringify(d)}).catch(function(){});
-  }catch(e){}
+      fetch(url, {method:'POST', keepalive:true,
+        headers:{'Content-Type':'text/plain;charset=UTF-8'},
+        body:JSON.stringify(d)}).catch(function(){});
+    }catch(e){}
+  });
 }
 
 function setupVideo(v, src){
@@ -65,6 +104,7 @@ function goStep(key, scroll){
 
   progressBar.style.width = (i >= 0 ? Math.min((i + 1) / 4, 1) * 100 : 100) + '%';
   if(scroll) quiz.scrollIntoView({behavior:'smooth', block:'start'});
+  if(key === '3' || key === '4') tsLoad();
 }
 function advance(){ var i = STEPS.indexOf(currentStep()); if(i > -1 && i < STEPS.length - 1) goStep(STEPS[i + 1], false); }
 function back(){ var i = STEPS.indexOf(currentStep()); if(i > 0) goStep(STEPS[i - 1], false); }
